@@ -47,6 +47,14 @@
           xorg.xcbutilcursor
           pixman
           libdrm
+          # testing
+          mypy
+          black
+          pytest
+          libcst
+          xvfbwrapper
+          tox
+          xkbcommon
         ];
 
         shellHook = with lib; with pkgs; ''
