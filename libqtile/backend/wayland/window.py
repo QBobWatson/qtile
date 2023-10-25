@@ -755,6 +755,8 @@ class Window(typing.Generic[S], _Base, base.Window, HasListeners):
         while self._borders:
             for rect in self._borders.pop():
                 rect.node.destroy()
+        if self.tree:
+            self.tree.node.set_position(0, 0)
 
         win = self._to_static(conf_x, conf_y, conf_width, conf_height)
 
