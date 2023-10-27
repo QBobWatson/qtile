@@ -32,10 +32,31 @@
         "type": "github"
       }
     },
+    "pywlroots": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "nixpkgs-2305": [
+          "nixpkgs-2305"
+        ]
+      },
+      "locked": {
+        "lastModified": 1698351877,
+        "narHash": "sha256-veBF9ZVvbjNRhk8qPBIxAvGePGP767Hmqnu5Oxi8q64=",
+        "type": "git",
+        "url": "file:///data/scratch/pywlroots"
+      },
+      "original": {
+        "type": "git",
+        "url": "file:///data/scratch/pywlroots"
+      }
+    },
     "root": {
       "inputs": {
         "nixpkgs": "nixpkgs",
-        "nixpkgs-2305": "nixpkgs-2305"
+        "nixpkgs-2305": "nixpkgs-2305",
+        "pywlroots": "pywlroots"
       }
     }
   },

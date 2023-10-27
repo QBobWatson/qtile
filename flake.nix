@@ -4,9 +4,15 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgs-2305.url = "github:NixOS/nixpkgs/nixos-23.05";
+
+    pywlroots = {
+      url = "/data/scratch/pywlroots";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs-2305.follows = "nixpkgs-2305";
+    };
   };
 
-  outputs = { self, nixpkgs, nixpkgs-2305 }:
+  outputs = { self, nixpkgs, nixpkgs-2305, ... }@inputs:
     let
       pkgs2305 = nixpkgs-2305.legacyPackages.x86_64-linux;
 
@@ -33,7 +39,6 @@
           pygobject3
           python-dateutil
           pywayland
-          pywlroots
           pyxdg
           xcffib
           xkbcommon
@@ -47,6 +52,9 @@
           xorg.xcbutilcursor
           pixman
           libdrm
+          pyopengl
+          pyopengl-accelerate
+          inputs.pywlroots.packages.x86_64-linux.default
           # testing
           mypy
           black
