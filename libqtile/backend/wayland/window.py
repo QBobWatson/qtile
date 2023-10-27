@@ -365,7 +365,7 @@ class Window(typing.Generic[S], _Base, base.Window, HasListeners):
             else:
                 rects = []
                 for x, y, w, h in geometries:
-                    rect = SceneRect(self.container, w, h, color_)
+                    rect = SceneRect.create(self.container, w, h, color_)
                     rect.node.set_position(x, y)
                     rects.append(rect)
 
@@ -1074,7 +1074,7 @@ class Internal(_Base, base.Internal):
             else:
                 rects = []
                 for x, y, w, h in geometries:
-                    rect = SceneRect(self.tree, w, h, color_)
+                    rect = SceneRect.create(self.tree, w, h, color_)
                     rect.node.set_position(x, y)
                     rects.append(rect)
 

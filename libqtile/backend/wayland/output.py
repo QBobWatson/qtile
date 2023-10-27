@@ -25,12 +25,13 @@ from typing import TYPE_CHECKING
 from wlroots.util.box import Box
 from wlroots.util.clock import Timespec
 from wlroots.wlr_types import Output as wlrOutput
-from wlroots.wlr_types import SceneOutput
+# from wlroots.wlr_types import SceneOutput
 from wlroots.wlr_types.layer_shell_v1 import (
     LayerShellV1Layer,
     LayerSurfaceV1KeyboardInteractivity,
 )
 
+from libqtile.backend.wayland.scene_output import SceneOutput
 from libqtile.backend.wayland.wlrq import HasListeners
 from libqtile.log_utils import logger
 
@@ -52,7 +53,7 @@ class Output(HasListeners):
         self.renderer = core.renderer
         self.wlr_output = wlr_output
         self._reserved_space = (0, 0, 0, 0)
-        self.scene_output = SceneOutput.create(core.scene, wlr_output)
+        self.scene_output = SceneOutput(core.scene, wlr_output, self.renderer)
 
         # These will get updated on the output layout's change event
         self.x = 0
