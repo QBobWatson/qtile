@@ -322,6 +322,14 @@ class Window(typing.Generic[S], _Base, base.Window, HasListeners):
         self.bordercolor = colors
         self.borderwidth = width
 
+        if self.core.custom_renderer:
+            for rects in self._borders:
+                for rect in rects:
+                    rect.node.destroy()
+            self._borders.clear()
+            self.core.custom_renderer.create_borders(self)
+            return
+
         if width == 0:
             for rects in self._borders:
                 for rect in rects:
@@ -365,7 +373,7 @@ class Window(typing.Generic[S], _Base, base.Window, HasListeners):
             else:
                 rects = []
                 for x, y, w, h in geometries:
-                    rect = SceneRect(self.container, w, h, color_)
+                    rect = SceneRect.create(self.container, w, h, color_)
                     rect.node.set_position(x, y)
                     rects.append(rect)
 
@@ -1074,7 +1082,7 @@ class Internal(_Base, base.Internal):
             else:
                 rects = []
                 for x, y, w, h in geometries:
-                    rect = SceneRect(self.tree, w, h, color_)
+                    rect = SceneRect.create(self.tree, w, h, color_)
                     rect.node.set_position(x, y)
                     rects.append(rect)
 

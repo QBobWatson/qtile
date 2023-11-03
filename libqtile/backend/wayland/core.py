@@ -198,6 +198,7 @@ class Core(base.Core, wlrq.HasListeners):
         # Some devices are added early, so we need to remember to configure them
         self._pending_input_devices: list[inputs._Device] = []
         hook.subscribe.startup_complete(self._configure_pending_inputs)
+        hook.subscribe.startup_complete(self._configure_custom_renderer)
 
         self._input_inhibit_manager = InputInhibitManager(self.display)
         self.add_listener(
@@ -307,6 +308,9 @@ class Core(base.Core, wlrq.HasListeners):
         self.mid_window_tree = self.layer_trees.pop(2)
         self.wallpapers: dict[config.Screen, tuple[SceneBuffer, ImageSurface]] = {}
 
+        # Support for custom renderers
+        self.custom_renderer: Any | None = None
+
         # Add support for additional protocols
         ExportDmabufManagerV1(self.display)
         XdgOutputManagerV1(self.display, self.output_layout)
@@ -385,6 +389,8 @@ class Core(base.Core, wlrq.HasListeners):
         for out in self.outputs.copy():
             out.finalize()
 
+        if self.custom_renderer:
+            self.custom_renderer.finalize()
         if self._xwayland:
             self._xwayland.destroy()
         self.cursor_manager.destroy()
@@ -1163,6 +1169,15 @@ class Core(base.Core, wlrq.HasListeners):
                 device.configure(self.qtile.config.wl_input_rules)
         self._pending_input_devices.clear()
 
+    def _configure_custom_renderer(self) -> None:
+        assert self.qtile is not None
+        if self.custom_renderer:
+            self.custom_renderer.finalize()
+        if self.qtile.config.wl_renderer:
+            self.custom_renderer = self.qtile.config.wl_renderer(self)
+        else:
+            self.custom_renderer = None
+
     def setup_listener(self, qtile: Qtile) -> None:
         """Setup a listener for the given qtile instance"""
         logger.debug("Adding io watch")
@@ -1227,6 +1242,9 @@ class Core(base.Core, wlrq.HasListeners):
         if self.qtile.config.wl_input_rules:
             for device in [*self.keyboards, *self._pointers]:
                 device.configure(self.qtile.config.wl_input_rules)
+
+        # Apply custom renderer
+        self._configure_custom_renderer()
 
     def new_wid(self) -> int:
         """Get a new unique window ID"""

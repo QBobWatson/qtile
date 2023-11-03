@@ -97,7 +97,10 @@ class Output(HasListeners):
 
     def _on_frame(self, _listener: Listener, _data: Any) -> None:
         try:
-            self.scene_output.commit()
+            if self.core.custom_renderer:
+                self.core.custom_renderer.render(self)
+            else:
+                self.scene_output.commit()
         except RuntimeError:
             # Failed to commit scene output; skip rendering.
             pass
